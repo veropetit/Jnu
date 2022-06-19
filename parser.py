@@ -52,3 +52,24 @@ def read_tlusty(file):
   h = tlusty[1]* Flambda_unit()
   ## The spectrum class is initialized with the eddington flux, so OK.
   return(spectrum(wave, h))
+
+def read_fastwind(file):
+    
+    fw = np.genfromtxt(file, unpack=True)
+    # first column is wavelength in AA
+    wave = fw[0]*u.AA
+    # Second column is f_nu
+    # Not clear if this is Flux or Astro Flux.
+    # Maybe best to use the H_nu column.
+    #f_n = fw[1]
+    # 3rd column is H_nu
+    h_nu = fw[2] * Fnu_unit()
+    ## The spectrum class is initialized with the eddington flux
+    ## in per wavelength unit.
+    ## Doing the conversion here
+    ## wave dwave = nu dnu
+    ## wave = nu dnu/dwave
+    ## where dnu/dwave = c / wave**2
+    h = (h_nu * const.c / wave**2).to(Flambda_unit())
+    return(spectrum(wave,h))
+    
