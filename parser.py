@@ -22,20 +22,20 @@ class spectrum:
         self.H_lambda = H_lambda
         
         
-    def to_F_lambda(self):
-        return(self)
+    def get_F_lambda(self):
+        return(self.H_lambda*4*np.pi)
         
-    def to_Fa_lambda(self):
-        return(self)
+    def get_Fa_lambda(self):
+        return(self.H_lambda*4)
         
-    def to_H_nu(self):
-        return(self)
+    def get_H_nu(self):
+        return((self.H_lambda*self.wave**2/const.c).to(Fnu_unit))
         
-    def to_F_nu(self):
-        return(self)
+    def get_F_nu(self):
+        return(self.get_H_nu()*4*np.pi)
         
-    def to_Fa_nu(self):
-        return(self)
+    def get_Fa_nu(self):
+        return(self.get_H_nu()*4)
         
     def get_nu(self):
         '''Return the wavelength array converted to frequency (Hz)'''
