@@ -58,18 +58,19 @@ def read_fastwind(file):
     fw = np.genfromtxt(file, unpack=True)
     # first column is wavelength in AA
     wave = fw[0]*u.AA
-    # Second column is f_nu
-    # Not clear if this is Flux or Astro Flux.
-    # Maybe best to use the H_nu column.
-    #f_n = fw[1]
-    # 3rd column is H_nu
-    h_nu = fw[2] * Fnu_unit()
+    # Second column is related to log(f_nu)
+    # and to go to Hnu, we need to do
+    # (according to the idlproc/readmod.pro):
+    correction = np.log10(120.0**2/(4*np.pi))
+    H_nu =  10**(fw[1]+correction) * Fnu_unit()
+    # This correcpond to the 10**3rd column of the .txt files.
+
     ## The spectrum class is initialized with the eddington flux
     ## in per wavelength unit.
     ## Doing the conversion here
     ## wave dwave = nu dnu
     ## wave = nu dnu/dwave
     ## where dnu/dwave = c / wave**2
-    h = (h_nu * const.c / wave**2).to(Flambda_unit())
-    return(spectrum(wave,h))
-    
+
+    H_lambda = (H_nu * const.c / wave**2).to(Flambda_unit())
+    return(spectrum(wave,H_lambda))
