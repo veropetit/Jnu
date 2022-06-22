@@ -29,7 +29,7 @@ class spectrum:
         return(self.H_lambda*4)
         
     def get_H_nu(self):
-        return((self.H_lambda*self.wave**2/const.c).to(Fnu_unit))
+        return((self.H_lambda*self.wave**2/const.c).to(Fnu_unit()))
         
     def get_F_nu(self):
         return(self.get_H_nu()*4*np.pi)
