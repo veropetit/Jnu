@@ -74,3 +74,58 @@ def read_fastwind(file):
 
     H_lambda = (H_nu * const.c / wave**2).to(Flambda_unit())
     return(spectrum(wave,H_lambda))
+
+
+class FASTWIND_model :
+    
+    def __init__ (self, spfile, outfile, jfile) :
+        self.init_spfile (spfile)
+        self.init_outfile (outfile)
+        self.init_jfile (jfile)
+        return
+
+    def init_spfile (self, spfile) :
+        self.wavelength, self.fluxa, self.fluxb = np.loadtxt (spfile, unpack=True)
+        return
+
+    def init_outfile (self, outfile) :
+        self.wavelength_OVI, self.spectrum_OVI = np.genfromtxt (outfile, unpack=True, skip_footer=1, usecols=(2,4))
+        return
+
+    def init_jfile (self, jfile) :
+        fh = open (jfile, 'rt')
+        lines = fh.readlines ()
+        fh.close ()
+        blocks = []
+        imin = 0
+        for i in range (len(lines)) :
+            if not lines[i].split () :
+                blocks.append (lines[imin:i])
+                imin = i+1
+        self.radius = np.array ([])
+        self.jwavelengths = np.array ([])
+        self.jnu = np.array ([])
+        for i in range (len (blocks)) :
+            wl, r, j = self.parse_block (blocks[i])
+            if i == 0 :
+                self.jwavelengths = wl
+                self.radius = r
+                self.jnu = j
+            else :
+                self.jwavelengths = np.append (self.jwavelengths, wl)
+                self.jnu = np.append (self.jnu, j, axis=0) # check correct axis
+        
+        
+    def parse_block (self, block) :
+        wlstring = block[2].replace ('|', ' ')
+        wl = np.fromstring (wlstring, sep=' ')
+        datalines = []
+        for i in range (len(block)) :
+            if i > 2 :
+                temp = block[i].replace ('|', ' ')
+                datalines.append (np.fromstring (temp, sep=' '))
+        data = np.transpose (np.array (datalines))
+        r = data[1,:]
+        jdata = data[2:,:]
+        return wl, r, jdata
+            
