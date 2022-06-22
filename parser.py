@@ -79,13 +79,27 @@ def read_fastwind(file):
 class FASTWIND_model :
     
     def __init__ (self, spfile, outfile, jfile) :
+        '''Initialize a FASTWIND_model from a set of 3 files
+        
+            :param spfile: a 3 column file containing wavelength (AA), log(Fnu), log(Hnu)
+            :param outfile: file containing a line profile
+            :param jfile: file containing Jnu(r) for a set of wavelengths
+            :return: a FASTWIND_model object.
+        '''
+    
         self.init_spfile (spfile)
         self.init_outfile (outfile)
         self.init_jfile (jfile)
         return
 
     def init_spfile (self, spfile) :
-        self.wavelength, self.fluxa, self.fluxb = np.loadtxt (spfile, unpack=True)
+        '''Init the FASTWIND_model.spectrum
+        
+            :param file: the spectrum file
+            :return: a spectrum object
+            '''
+        spectrum = read_fastwind(spfile)
+        self.spectrum = spectrum
         return
 
     def init_outfile (self, outfile) :
@@ -103,16 +117,17 @@ class FASTWIND_model :
                 blocks.append (lines[imin:i])
                 imin = i+1
         self.radius = np.array ([])
-        self.jwavelengths = np.array ([])
+        self.jwavelengths = np.array ([])*u.AA
         self.jnu = np.array ([])
         for i in range (len (blocks)) :
             wl, r, j = self.parse_block (blocks[i])
             if i == 0 :
-                self.jwavelengths = wl
+                self.jwavelengths = wl*u.AA
                 self.radius = r
+                ## Need to add the proper Jnu units here.
                 self.jnu = j
             else :
-                self.jwavelengths = np.append (self.jwavelengths, wl)
+                self.jwavelengths = np.append (self.jwavelengths, wl*u.AA)
                 self.jnu = np.append (self.jnu, j, axis=0) # check correct axis
         
         
