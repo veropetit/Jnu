@@ -3,6 +3,7 @@ print("Importing jnu.parser")
 import numpy as np
 import astropy.units as u
 import astropy.constants as const
+import bisect
 
 def Fnu_unit():
   return(1*u.erg/u.s/u.cm**2/u.Hz)
@@ -41,10 +42,18 @@ class spectrum:
         '''Return the wavelength array converted to frequency (Hz)'''
         return((const.c/self.wave).to(u.Hz))
 
-    def get_J_nu (self, radius) :
+    def get_H_nu_nu (self, nu) :
+      i = bisect (get_nu (), nu)
+      return (get_H_nu ()[i])
+      
+    def get_J_nu (self, radius) : # radius is scalar
       H_nu = self.get_H_nu ()
-      return (4 * H_nu * dilution(radius))
+      return (4 * H_nu * dilution(radius)) # array size same as nu
 
+    def get_J_nu_nu (self, nu, radius) : # nu is scalar, radius can be array or scalar
+      H_nu = get_H_nu_nu (nu)
+      return (4 * H_nu * dilution(radius)) # return type matches radius
+    
 def dilution (radius) :
   return 0.5 * (1. - np.sqrt (1. - radius**(-2)))
         
