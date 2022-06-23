@@ -43,8 +43,11 @@ class spectrum:
         return((const.c/self.wave).to(u.Hz))
 
     def get_H_nu_nu (self, nu) :
-      i = bisect.bisect (self.get_nu (), nu)
-      return (self.get_H_nu ()[i])
+      # need to invert because wavelength is increasing
+      # should probably rewrite this to use wavelength directly
+      i = bisect.bisect (self.get_nu ()[::-1], nu)
+      
+      return ((self.get_H_nu ()[::-1])[i])
       
     def get_J_nu (self, radius) : # radius is scalar
       H_nu = self.get_H_nu ()
