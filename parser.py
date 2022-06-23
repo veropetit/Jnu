@@ -40,6 +40,12 @@ class spectrum:
     def get_nu(self):
         '''Return the wavelength array converted to frequency (Hz)'''
         return((const.c/self.wave).to(u.Hz))
+
+    def get_J_nu (self, radius) :
+      return (self.get_H_nu*4*dilution(radius))
+
+def dilution (radius) :
+  return 0.5 * (1. - np.sqrt (1. - radius**2))
         
     # Overload __getitem and __setitem
     
