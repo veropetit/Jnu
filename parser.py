@@ -51,7 +51,7 @@ class spectrum:
       return (4 * H_nu * dilution(radius)) # array size same as nu
 
     def get_J_nu_nu (self, nu, radius) : # nu is scalar, radius can be array or scalar
-      H_nu = get_H_nu_nu (nu)
+      H_nu = self.get_H_nu_nu (nu)
       return (4 * H_nu * dilution(radius)) # return type matches radius
     
 def dilution (radius) :
