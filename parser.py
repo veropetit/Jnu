@@ -43,9 +43,10 @@ class spectrum:
 
     def get_J_nu (self, radius) :
       return (self.get_H_nu()*4*dilution(radius))
+      #return (4*dilution(radius))
 
 def dilution (radius) :
-  return 0.5 * (1. - np.sqrt (1. - radius**2))
+  return 0.5 * (1. - np.sqrt (1. - radius**-2))
         
     # Overload __getitem and __setitem
     
