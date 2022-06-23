@@ -43,7 +43,7 @@ class spectrum:
         return((const.c/self.wave).to(u.Hz))
 
     def get_H_nu_nu (self, nu) :
-      i = bisect (self.get_nu (), nu)
+      i = bisect.bisect (self.get_nu (), nu)
       return (self.get_H_nu ()[i])
       
     def get_J_nu (self, radius) : # radius is scalar
