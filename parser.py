@@ -42,7 +42,8 @@ class spectrum:
         return((const.c/self.wave).to(u.Hz))
 
     def get_J_nu (self, radius) :
-      return (self.get_H_nu() * 4 * dilution(radius))
+      H_nu = self.get_H_nu ()
+      return (4 * H_nu * dilution(radius))
 
 def dilution (radius) :
   return 0.5 * (1. - np.sqrt (1. - radius**(-2)))
