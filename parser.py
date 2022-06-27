@@ -56,11 +56,14 @@ class spectrum:
     def get_J_nu_nu (self, nu, radius) : # nu is scalar, radius can be array or scalar
       H_nu = self.get_H_nu_nu (nu)
       return (4 * H_nu * dilution(radius)) # return type matches radius
-    
+
+    # Overload __getitem and __setitem
+
+
+
 def dilution (radius) :
   return 0.5 * (1. - np.sqrt (1. - radius**(-2)))
         
-    # Overload __getitem and __setitem
     
 def read_tlusty(file):
 
@@ -137,7 +140,7 @@ class FASTWIND_model :
                 imin = i+1
         self.radius = np.array ([])
         self.jwavelengths = np.array ([])*u.AA
-        self.jnu = np.array ([])
+        self.jnu = np.array ([]) * Fnu_unit()
         for i in range (len (blocks)) :
             wl, r, j = self.parse_block (blocks[i])
             if i == 0 :
@@ -147,7 +150,11 @@ class FASTWIND_model :
                 self.jnu = j
             else :
                 self.jwavelengths = np.append (self.jwavelengths, wl*u.AA)
-                self.jnu = np.append (self.jnu, j, axis=0) # check correct axis
+                self.jnu = np.append (self.jnu, j* Fnu_unit(), axis=0) # check correct axis
+        # Calculating J_lambda
+        self.jlambda = np.zeros(self.jwavelengths.size, self.radius.size)
+        for i in range(0,self.jwavelengths.size):
+            self.jlambda[i,:] = (self.jnu*[i,:] const.c / self.jwavelengths[i]**2).to(Flambda_unit())
         
         
     def parse_block (self, block) :
