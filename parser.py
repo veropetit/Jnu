@@ -150,11 +150,11 @@ class FASTWIND_model :
                 self.jnu = j
             else :
                 self.jwavelengths = np.append (self.jwavelengths, wl*u.AA)
-                self.jnu = np.append (self.jnu, j* Fnu_unit(), axis=0) # check correct axis
+                self.jnu = np.append (self.jnu, j*Fnu_unit(), axis=0) # check correct axis
         # Calculating J_lambda
         self.jlambda = np.zeros(self.jwavelengths.size, self.radius.size)
         for i in range(0,self.jwavelengths.size):
-            self.jlambda[i,:] = (self.jnu*[i,:] const.c / self.jwavelengths[i]**2).to(Flambda_unit())
+            self.jlambda[i,:] = (self.jnu[i,:] * const.c / self.jwavelengths[i]**2).to(Flambda_unit())
         
         
     def parse_block (self, block) :
