@@ -1,4 +1,4 @@
-dict helike_wavelengths {
+helike_wavelengths = {
     #6: (), # need to look up wavelenghs for C
     7: (1907.26, 1896.74),
     8: (1638.28, 1623.61),
@@ -10,7 +10,7 @@ dict helike_wavelengths {
 # format is (lambda1, lambda2)
 
 # relative contribution of J=2 to effective branching ratio:
-dict helike_B2_B {
+helike_B2_B = {
     # 6: ,
     7: 0.004,
     8: 0.008,
